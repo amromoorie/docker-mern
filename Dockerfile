@@ -1,14 +1,14 @@
 FROM node:16.13.1-alpine3.14
 # ENV NODE_ENV production
 # creating user app making it sudoer
-RUN addgroup node && adduser -S -G node node
+RUN addgroup nodeapp && adduser -S -G nodeapp nodeapp
 # to pass permission issues with COPY cmd, creating & chown node modules with it's package-lock json
-RUN mkdir -p /app/node_modules && chown node /app/node_modules 
+RUN mkdir -p /app/node_modules && chown nodeapp /app/node_modules 
 # RUN touch /app/package-lock.json && chown app /app/package-lock.json 
-RUN touch /app/yarn-error.log && chown node /app/yarn-error.log 
-RUN touch /app/yarn.lock && chown node /app/yarn.lock 
+RUN touch /app/yarn-error.log && chown nodeapp /app/yarn-error.log 
+RUN touch /app/yarn.lock && chown nodeapp /app/yarn.lock 
 
-USER node
+USER nodeapp
 # create app dir
 # RUN chown app /-app
 # RUN mkdir -p /usr/src/app
@@ -18,7 +18,7 @@ WORKDIR /app
 # copy files into container under node user
 # COPY --chown=app:app . .
 COPY /server/package*.json .
-RUN chown -R node /app/node_modules
+RUN chown -R nodeapp /app/node_modules
 
 
 # install depedencies depending on environment ENV
@@ -38,4 +38,4 @@ EXPOSE $PORT
 # CMD yarn start
 # initialize app
 WORKDIR /app/server
-ENTRYPOINT [ "yarn", "start" ]
+CMD [ "yarn", "start" ]
